@@ -1,8 +1,7 @@
 <?php
 
-function exibeMensagem($mensagem){
-    echo $mensagem . PHP_EOL;
-}
+require_once 'funcoes.php'; // inclui o arquivo funcoes.php, voce pode incluir quantos arquivos quiser e pode usar os parenteses para chamar funcoes dentro do proprio arquivo ou não precisa do parenteses se for chamar fora do arquivo, pode usar o require ou o require_once que vai incluir o arquivo apenas uma vez
+// se for usar o require_once ele vai incluir o arquivo apenas uma vez, se for usar o require ele vai incluir o arquivo quantas vezes quiser, se caso usar mais de uma vez ele vai dar erro
 
 $contasCorrentes = [
     48169779880 => [
@@ -19,23 +18,17 @@ $contasCorrentes = [
     ]
 ];
 
- $contasCorrentes[481697879880] = [
-    'titular' => 'Daniel',
-    'saldo' => 100
-];
+$contasCorrentes['48169779881'] = sacar( $contasCorrentes['48169779881'], 500);
 
-if(500 > $contasCorrentes['48169779881'] ['saldo']){
-    exibeMensagem("Você não pode sacar, seu saldo é insuficiente" . PHP_EOL) ;
-}else{
-    $contasCorrentes['48169779881'] ['saldo'] -=500;
-}
+$contasCorrentes['48169779880'] = depositar (
+    $contasCorrentes['48169779880'], 
+    900
+);
 
-if (500 > $contasCorrentes['48169779882'] ['saldo']){
-    exibeMensagem("Você não pode sacar, seu saldo é insuficiente" . PHP_EOL) ;
-}else{
-    $contasCorrentes['48169779882'] ['saldo'] -= 500;
-}
+titularComLetrasMaiusculas($contasCorrentes['48169779881']);
+
 
 foreach ($contasCorrentes as $cpf => $conta){
-    echo  $cpf . " " .    $conta['titular'] .  ' ' . $conta['saldo']   . PHP_EOL; 
+    echo  "$cpf {$conta["titular"]} {$conta["saldo"]}" . PHP_EOL; 
 }
+ 
