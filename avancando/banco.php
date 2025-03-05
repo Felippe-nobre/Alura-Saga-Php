@@ -17,18 +17,27 @@ $contasCorrentes = [
         'saldo' => 300
     ]
 ];
-
-$contasCorrentes['48169779881'] = sacar( $contasCorrentes['48169779881'], 500);
-
-$contasCorrentes['48169779880'] = depositar (
-    $contasCorrentes['48169779880'], 
-    900
-);
-
+//unset($contasCorrentes['48169779882']); // remove a chave 48169779882 do array contasCorrentes, caso nao use o & ele vai criar uma copia da variavel
 titularComLetrasMaiusculas($contasCorrentes['48169779881']);
+//a baixo fechamos a tag php, em seguida comecamos a escrever codigo html
+?> 
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
 
-
-foreach ($contasCorrentes as $cpf => $conta){
-    echo  "$cpf {$conta["titular"]} {$conta["saldo"]}" . PHP_EOL; 
-}
- 
+<body>
+    <h1>Contas corentes</h1>
+    <dl>
+    <?php foreach($contasCorrentes as $cpf => $conta) { ?>
+        <dt>
+            <h3><?= $conta['titular']; ?> - <?= $cpf; ?></h3></dt>
+        <dd>
+            Saldo: <?=  $conta['saldo']; ?></dd>
+        <?php } ?>
+    </dl>
+</body>
+</html>
