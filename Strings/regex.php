@@ -3,7 +3,7 @@
 $telefones = ['(24) 99999 - 9999', '(21) 99999 - 9999', '(24) 2222 - 2222'];
 
 foreach ($telefones as $telefone) {
-    $regex = '/^\(([0-9]{2})\) (9?[0-9]{4} - [0-9]{4})$/';
+    $regex = '/^\(([0-9]{2})\) (9?[0-9]{4} - [0-9]{4})$/'; // regex serve para criar uma expressao regular, ele vai ser executado automaticamente quando a classe for instanciada
     $telefoneValido = preg_match(
         $regex,
         $telefone,
