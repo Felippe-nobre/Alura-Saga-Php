@@ -23,7 +23,7 @@ class Titular
     private function validaNomeTitular(string $nomeTitular):void
     {
      if(strlen($nomeTitular) <5){
-         echo"Nome precisa ter pelo menos 5 caracteres" . PHP_EOL;
+         echo"O nome precisa ter pelo menos 5 caracteres" . PHP_EOL;
          exit();
      }
     }
