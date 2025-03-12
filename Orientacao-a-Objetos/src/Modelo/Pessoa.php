@@ -1,13 +1,14 @@
 <?php
 namespace Alura\Banco\Modelo; //namespace serve para criar um namespace, ele vai ser executado automaticamente quando a classe for instanciada
-class Pessoa
+abstract class Pessoa
 {
+    use AcessoPropriedades;
     protected $nome; //protected serve para proteger a variavel, ele nao pode ser acessada fora da classe'
     private $cpf;
 
     public function __construct(string $nome, CPF $cpf)
     {
-        $this->validaNomeTitular($nome);
+        $this->validaNome($nome);
         $this->nome = $nome;
         $this->cpf = $cpf;
     }
@@ -22,7 +23,7 @@ class Pessoa
         return $this->cpf->recuperaNumero();
     }
 
-    protected function validaNomeTitular(string $nomeTitular)
+    final protected function validaNome(string $nomeTitular)
     {
         if (strlen($nomeTitular) < 5) {
             echo "Nome precisa ter pelo menos 5 caracteres";
