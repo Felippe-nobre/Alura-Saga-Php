@@ -16,8 +16,6 @@ mode	Descrição
 'c':	Abre o arquivo somente para escrita. Se o arquivo não existir, ele é criado. Se existir, ele não é truncado (ao contrário de 'w') e nem a chamada a esta função falha (como no caso de 'x'). O ponteiro é posicionado no início do arquivo. Isto pode ser útil se for desejado obter uma trava consultiva (consulte flock()) antes de tentar modificar o arquivo, já que usar 'w' poderia trincar o arquivo antes que a trava fosse obtida (se o truncamento for desejado, ftruncate() pode ser usando depois que a trava for requisitada).
 'c+':	Abre o arquivo para leitura e escrita; fora isso, tem o mesmo comportamento de 'c'.
 'e':	Define a opção close-on-exec no descritor do arquivo aberto. Somente disponível no PHP compilado em sistemas conforme POSIX.1-2008.
-
-
 */
 
 $curso = "Design Patterns PHP II: Boas práticas de programação";
