@@ -1,0 +1,21 @@
+{
+    "name": "felippe-nobre/buscador-cursos",
+    "description": "Projeto que busca os cursos no site da Alura",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Felippe Nobre",
+            "email": "felippenobresouza@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.9",
+        "symfony/dom-crawler": "^6.3",
+        "symfony/css-selector": "^7.2"
+    },
+    "autoload" : {     
+        "psr-4" : {
+            "Alura\\BuscadorDeCursos\\": "src/" 
+        }
+    }
+}
