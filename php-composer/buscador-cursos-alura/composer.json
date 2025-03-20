@@ -17,5 +17,27 @@
         "psr-4" : {
             "Alura\\BuscadorDeCursos\\": "src/" 
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0",
+        "squizlabs/php_codesniffer": "*",
+        "phan/phan": "^5.4"
+    },
+    "scripts": {
+        "teste": "phpunit tests\\TestBuscadorDeCursos.php",
+        "cs": "phpcs --standard=PSR12 src",
+        "phan": "phan --allow-polyfill-parser",
+        "exibe-cusos": "Namespace\\Da\\Classe::metodo",
+        "check": [
+            "@phan",
+            "@cs",
+            "@teste"
+        ],
+        "post-update-cmd": [
+            "@teste"
+        ]
+    },
+    "scripts-descriptions": {
+        "check": "Roda as verificações do código. PHAN, PHPCS e PHPUNIT"
     }
 }
