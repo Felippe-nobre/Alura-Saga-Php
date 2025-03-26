@@ -4,8 +4,16 @@ declare(strict_types=1);
 
 namespace Alura\Mvc\Controller;
 
-class LoginController implements Controller
+use Alura\Mvc\Helper\FlashMessageTrait;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+
+class LoginController implements RequestHandlerInterface
 {
+    use FlashMessageTrait;
+
     private \PDO $pdo;
 
     public function __construct()
@@ -14,7 +22,7 @@ class LoginController implements Controller
         $this->pdo = new \PDO("sqlite:$dbPath");
     }
 
-    public function processaRequisicao(): void
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = filter_input(INPUT_POST, 'password');
@@ -25,20 +33,21 @@ class LoginController implements Controller
         $statement->execute();
 
         $userData = $statement->fetch(\PDO::FETCH_ASSOC);
-        $correctPassword = password_verify($password, $userData['password'] ?? '');//password_verify serve para verificar se a senha esta correta
-        if(password_needs_rehash($userData['password'], PASSWORD_ARGON2ID)){
-            $statement = $this->pdo->prepare('UPDATE users SET password = ? WHERE id = ?;');
+        $correctPassword = password_verify($password, $userData['password'] ?? '');
+
+        if (!$correctPassword) {
+            $this->addErrorMessage('Usuário ou senha inválidos');
+            return new Response(302, ['Location' => '/login']);
+        }
+
+        if (password_needs_rehash($userData['password'], PASSWORD_ARGON2ID)) {
+            $statement = $this->pdo->prepare('UPDATE users SET password = ? WHERE id = ?');
             $statement->bindValue(1, password_hash($password, PASSWORD_ARGON2ID));
-            $statement->bindValue(2,$userData['id']);
+            $statement->bindValue(2, $userData['id']);
             $statement->execute();
         }
 
-        if ($correctPassword) {
-            //session_start();//session_start serve para iniciar a sessao do usuario, usamos quando nosso programa tem que ter uma sessao
-            $_SESSION['logado'] = true;//$_SESSION serve para armazenar informacoes na sessao do usuario
-            header('Location: /');
-        } else {
-            header('Location: /login?sucesso=0');
-        }
-        }
+        $_SESSION['logado'] = true;
+        return new Response(302, ['Location' => '/']);
+    }
 }
