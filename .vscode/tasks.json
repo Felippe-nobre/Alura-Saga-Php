@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "PHP-Laravel/controle-series",
+      "problemMatcher": [],
+      "label": "npm: dev - PHP-Laravel/controle-series",
+      "detail": "npm run development"
+    }
+  ]
+}
