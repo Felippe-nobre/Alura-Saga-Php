@@ -25,7 +25,6 @@ class SeriesFormRequest extends FormRequest
     {
         return [
             'nome' => ['required', 'min:2'],
-            // 'nome.min' => 'O campo nome deve ter pelo menos :min caracteres', aqui eu posso personalizar a mensagem de erro
         ];
     }
 }

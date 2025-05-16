@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\SeasonsController;
-use App\Http\Controllers\SeriesController;
+use App\Models\Series;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,10 +15,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/series');
+    return view('welcome');
 });
 
-Route::resource('/series', SeriesController::class)
-    ->except(['show']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-Route::get('/series/{series}/seasons', [SeasonsController::class, 'index'])->name('seasons.index');
+Route::get('/email', function () {
+    return new \App\Mail\SeriesCreated(
+        'Série de teste',
+        19,
+        5,
+        10,
+    );
+});
+
+require __DIR__ . '/auth.php';
+

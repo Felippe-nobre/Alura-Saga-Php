@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
-use App\Models\Episode;
-use App\Models\Season;
+use App\Mail\SeriesCreated as SeriesCreatedMailable; // lembre de importar com alias, se necessário
 use App\Models\Series;
+use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class SeriesController extends Controller
 {
+    public function __construct(private SeriesRepository $repository)
+    {
+        $this->middleware('auth')->except('index');
+    }
+
     public function index(Request $request)
     {
         $series = Series::all();
@@ -27,26 +31,27 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request)
     {
-        $serie = Series::create($request->all());
-        $seasons = [];
-        for ($i = 1; $i <= $request->seasonsQty; $i++) {
-            $seasons[] = [
-                'series_id' => $serie->id,
-                'number' => $i,
-            ];
-        }
-        Season::insert($seasons);
+        // Processa a imagem da capa (se houver)
+        $coverPath = $request->hasFile('cover')
+            ? $request->file('cover')->store('series_cover', 'public')
+            : null;
+        $request->coverPath = $coverPath;
 
-        $episodes = [];
-        foreach ($serie->seasons as $season) {
-            for ($j = 1; $j <= $request->episodesPerSeason; $j++) {
-                $episodes[] = [
-                    'season_id' => $season->id,
-                    'number' => $j
-                ];
-            }
-        }
-        Episode::insert($episodes);
+        // Cria a série usando o repositório
+        $serie = $this->repository->add($request);
+
+        // Extrai os campos do request para disparar o evento.
+        // Aqui usamos os valores dos inputs: seasonsQty e episodesPerSeason.
+        $seasonsQty = $request->seasonsQty ?? 0;
+        $episodesPerSeason = $request->episodesPerSeason ?? 0;
+
+        // Dispara o evento passando os dados individualmente (não dentro de um array)
+        \App\Events\SeriesCreated::dispatch(
+            $serie->nome,
+            $serie->id,
+            $seasonsQty,
+            $episodesPerSeason
+        );
 
         return to_route('series.index')
             ->with('mensagem.sucesso', "Série '{$serie->nome}' adicionada com sucesso");
@@ -54,10 +59,6 @@ class SeriesController extends Controller
 
     public function destroy(Series $series)
     {
-        // $Series = Series::find($Series);// o find serve para encontrar um registro no banco de dados
-        // $Series->delete();// o delete serve para deletar um registro no banco de dados
-        // //$request->session()->flash('mensagem.sucesso', "Series'{$Series->nome}' removida com sucesso");//flash serve para enviar uma mensagem para a view
-        // return to_route('series')->with('mensagemSucesso', "Series'{$Series->nome}' removida com sucesso");//with serve para enviar uma mensagem para a view
         $series->delete();
 
         return to_route('series.index')
